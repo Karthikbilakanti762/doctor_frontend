@@ -42,7 +42,7 @@ const AllPatients = () => {
       
       if (res.data.patients.length > 0) {
         const patientId = res.data.patients[0]._id;
-        const { data: visitData } = await axios.get(`/api/visits/patient/${patientId}`);
+        const { data: visitData } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/visits/patient/${patientId}`);
         setVisits(visitData);
         
       }
