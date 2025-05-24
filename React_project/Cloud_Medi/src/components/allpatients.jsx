@@ -34,7 +34,7 @@ const AllPatients = () => {
   const fetchPatients = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/patients', {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/patients`, {
         params: { search, gender, minAge, maxAge, from, to, sort, page, limit: 9 }
       });
       setPatients(res.data.patients);
@@ -333,7 +333,7 @@ useEffect(() => {
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
                           {patient.image ? (
-                            <img src={`http://localhost:5000/api/files/${patient.image}`} alt={patient.name} className="h-10 w-10 rounded-full object-cover" />
+                            <img src={`${import.meta.env.VITE_BACKEND_URL}/api/files/${patient.image}`} alt={patient.name} className="h-10 w-10 rounded-full object-cover" />
                           ) : (
                             <User size={16} className="text-gray-400" />
                           )}

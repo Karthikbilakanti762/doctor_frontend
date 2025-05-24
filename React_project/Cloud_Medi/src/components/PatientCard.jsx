@@ -33,7 +33,7 @@ const PatientCard = ({ patient, visits }) => {
           <div className="h-16 w-16 rounded-full bg-white flex items-center justify-center border-4 border-blue-200 shadow-sm overflow-hidden">
             {patient.image ? (
               <img 
-                src={`http://localhost:5000/api/files/${patient.image}`} 
+                src={`${import.meta.env.VITE_BACKEND_URL}/api/files/${patient.image}`} 
                 alt={patient.name} 
                 className="h-full w-full object-cover"
               />

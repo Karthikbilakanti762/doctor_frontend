@@ -1,4 +1,3 @@
-
 //main final backup page
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -67,14 +66,14 @@ const [selectedReportId, setSelectedReportId] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: patientData } = await axios.get(`/api/patients/${patientId}`);
+        const { data: patientData } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/patients/${patientId}`);
         setPatient(patientData);
 
-        const { data: visitData } = await axios.get(`/api/visits/patient/${patientId}`);
+        const { data: visitData } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/visits/patient/${patientId}`);
         setVisits(visitData); 
         setSelectedVisit(visitData[0]);
 
-        const { data: labData } = await axios.get(`/api/labs/patient/${patientId}`);
+        const { data: labData } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/labs/patient/${patientId}`);
         setLabReports(labData);
       } catch (error) {
         console.error('Error fetching patient data:', error);
@@ -88,7 +87,7 @@ const [selectedReportId, setSelectedReportId] = useState(null);
 
   const handlePrescriptionAdded = async () => {
     try {
-      const { data: visitData } = await axios.get(`/api/visits/patient/${patientId}`);
+      const { data: visitData } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/visits/patient/${patientId}`);
       setVisits(visitData);
   
       // Update selectedVisit with the latest one from refreshed data
@@ -101,7 +100,7 @@ const [selectedReportId, setSelectedReportId] = useState(null);
   
   const fetchLabReports = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/labs/patient/${patientId}` );
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/labs/patient/${patientId}`);
       setLabReports(response.data); 
     } catch (error) {
       console.error('Error fetching lab reports:', error);
@@ -110,7 +109,7 @@ const [selectedReportId, setSelectedReportId] = useState(null);
 
   const handleAddTest = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/labs' , {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/labs`, {
         patientId: patient._id,   
         testName: newTestName,
         visitId : selectedVisit._id
@@ -132,7 +131,7 @@ const [selectedReportId, setSelectedReportId] = useState(null);
   
   const handleDeleteTest = async (labReportId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/labs/${labReportId}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/labs/${labReportId}`);
       setLabReports(prev => prev.filter(report => report._id !== labReportId));
       console.log('Lab report deleted successfully');
     } catch (error) {
@@ -898,7 +897,7 @@ const [selectedReportId, setSelectedReportId] = useState(null);
                       <td className="py-4 px-4 font-medium text-gray-800">{report.testName}</td>
                       <td className="py-4 px-4">
                         <button 
-                          onClick={() => setSelectedImage(`http://localhost:5000/api/files/${report.result}`)}
+                          onClick={() => setSelectedImage(`${import.meta.env.VITE_BACKEND_URL}/api/files/${report.result}`)}
                           className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
                           title="View Report"
                         >

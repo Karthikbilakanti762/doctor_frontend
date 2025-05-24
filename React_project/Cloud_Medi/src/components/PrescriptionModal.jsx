@@ -62,7 +62,7 @@ const PrescriptionModal = ({
     try {
       setIsProcessing(true);
       const res = await fetch(
-        `http://localhost:5000/api/visits/${visitId}/prescription`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/visits/${visitId}/prescription`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

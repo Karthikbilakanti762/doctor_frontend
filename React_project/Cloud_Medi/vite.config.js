@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5000', // adjust if your backend runs on a different port
+      '/api': process.env.VITE_BACKEND_URL || 'https://doctor-backend-ylju.onrender.com', // Using environment variable with fallback
     },
   },
   resolve: {

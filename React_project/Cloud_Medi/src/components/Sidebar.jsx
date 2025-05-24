@@ -59,7 +59,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const fetchPatients = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/patients', {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/patients`, {
         params: { search, limit: 50 }
       });
       setPatients(res.data.patients);
@@ -179,7 +179,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
                   <NewPatientCard
                     patient={{
                       ...patient,
-                      avatarUrl: patient.image ? `http://localhost:5000/api/files/${patient.image}` : undefined
+                      avatarUrl: patient.image ? `${import.meta.env.VITE_BACKEND_URL}/api/files/${patient.image}` : undefined
                     }}
                     selected={isPatientSelected(patient._id)}
                     onClick={() => handlePatientClick(patient._id)}

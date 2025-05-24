@@ -40,7 +40,7 @@ export default function Header() {
     setQuery(value);
     if (!value.trim()) return setResults([]);
     try {
-      const res = await axios.get(`http://localhost:5000/api/patients/search?q=${value}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/patients/search?q=${value}`);
       setResults(res.data);
     } catch (err) {
       console.error('Search failed:', err);

@@ -32,7 +32,7 @@ const PatientCardH = ({ patient }) => {
       <div className="p-4 flex-shrink-0">
         <div className="h-16 w-16 md:h-20 md:w-20 rounded-full bg-gradient-to-br from-teal-50 to-blue-50 border-2 border-teal-100 flex items-center justify-center overflow-hidden">
           {patient.image ? (
-            <img src={`http://localhost:5000/api/files/${patient.image}`} alt={patient.name} className="h-full w-full object-cover" />
+            <img src={`${import.meta.env.VITE_BACKEND_URL}/api/files/${patient.image}`} alt={patient.name} className="h-full w-full object-cover" />
           ) : (
             <User size={32} className="text-teal-500" />
           )}
