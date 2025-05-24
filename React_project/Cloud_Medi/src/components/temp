@@ -1,0 +1,169 @@
+import { useState , useEffect  } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from "react-hot-toast";
+
+export default function Login() {
+  const navigate = useNavigate();
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [showVideo, setShowVideo] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/doctor/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.doctor));
+        localStorage.setItem("hasGreeted", "false");
+        setShowVideo(true);
+      } else {
+        toast.error(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Something went wrong while logging in');
+    }
+
+  };
+  useEffect(() => {
+    if (showVideo) {
+      //const music = new Audio('/uploads/intro_music.mp3'); 
+      //music.play();
+
+      setTimeout(() => {
+        setFadeOut(true); // Start fade out
+      }, 2500); // Start fadeOut at 2.5s
+
+      setTimeout(() => {
+        navigate('/');
+      }, 4000); 
+    }
+  }, [showVideo, navigate]);
+
+  if (showVideo) {
+    return (
+      <div className={`flex items-center justify-center h-screen bg-black relative overflow-hidden ${fadeOut ? 'animate-fadeOut' : ''}`}>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black opacity-50 animate-fadeIn"></div>
+
+        {/* Video */}
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="w-full h-full object-cover animate-zoomFade"
+          onError={() => console.log('Error loading video')}
+        >
+          <source src="/uploads/videolog.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    );
+  }
+  
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="sm:max-w-md w-full bg-white shadow-2xl hover:shadow-2xl transition-all rounded-3xl p-10 border border-gray-200">
+        <div className="flex flex-col items-center mb-10">
+        <div className="h-16 w-16 rounded-full bg-teal-500 flex items-center justify-center mb-4 shadow-md">
+  <img 
+    src="/jj-removebg-preview.png" 
+    alt="Icon" 
+    className="h-8 w-8 object-contain"
+  />
+</div>
+          <h2 className="text-3xl font-extrabold text-gray-800">CLOUDMEDI</h2>
+          <p className="text-sm text-gray-500 mt-2">Doctor Portal Access</p>
+        </div>
+
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          {/* Email Field */}
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                </svg>
+              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={credentials.email}
+                onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                className="pl-12 w-full px-8 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                placeholder="doctor@cloudmedi.com"
+              />
+            </div>
+          </div>
+
+          {/* Password Field */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={credentials.password}
+                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                className="pl-12 w-full px-8 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div>
+            <button
+              type="submit"
+              disabled={!credentials.email || !credentials.password}
+              className={`${
+                credentials.email && credentials.password
+                  ? "bg-teal-600 hover:bg-teal-700 focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                  : "bg-gray-300 cursor-not-allowed"
+              } w-full flex justify-center py-3 px-4 rounded-lg text-white font-semibold transition-all`}
+            >
+              Sign In
+            </button>
+          </div>
+        </form>
+
+        {/* Footer */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500">
+            Need help?{" "}
+            <a href="https://wa.me/919000923824" className="font-medium text-teal-600 hover:text-teal-500">
+              Contact Admin
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
